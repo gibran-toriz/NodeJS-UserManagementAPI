@@ -36,7 +36,7 @@ async function bootstrap(): Promise<void> {
     await app.listen(port, '0.0.0.0');
 
     // Log the application URL
-    logger.info(`Application is running on: ${await app.getUrl()}`);
+    logger.info(`Application v0.1.1 is running on: ${await app.getUrl()}`);
   } catch (error) {
     // Log the error and exit the process
     logger.error(`Failed to bootstrap the application: ${error.message}`, error);

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,    
     "module": "commonjs",
+    "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -14,9 +15,14 @@
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "*": ["node_modules/*"]
+    }
+  },  
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
