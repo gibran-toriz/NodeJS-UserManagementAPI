@@ -60,7 +60,7 @@ export class UserService {
    * @param id The ID of the user to delete.
    * @returns The result of the deletion operation.
    */
-    async remove(id: string): Promise<any> {
+    async delete(id: string): Promise<any> {
         const result = await this.userModel.findByIdAndDelete(id).exec();
         if (!result) {
             throw new NotFoundException(`User with ID "${id}" not found`);
