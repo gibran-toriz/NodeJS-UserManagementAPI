@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { AppModule } from './modules/app.module';
+import { AppModule } from './app.module';
 import { logger } from './config/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -26,7 +26,7 @@ async function bootstrap(): Promise<void> {
     const config = new DocumentBuilder()
       .setTitle('User Management API')
       .setDescription('API for managing user data')
-      .setVersion('1.0')
+      .setVersion('0.1.0')
       .build();    
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api', app, document);
