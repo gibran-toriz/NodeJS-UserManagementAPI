@@ -6,8 +6,7 @@ import { logger } from '../../../config/logger';
 /**
  * Represents a user in the system.
  */
-export interface User extends mongoose.Document {    
-    username: string;    
+export interface User extends mongoose.Document {         
     email: string;    
     password: string;    
     createdAt: Date;
@@ -20,9 +19,7 @@ export interface User extends mongoose.Document {
 /**
  * User schema structure
  */
-export const UserSchema = new mongoose.Schema({
-  // Username for the user, required field and unique
-  username: { type: String, required: true, unique: true },
+export const UserSchema = new mongoose.Schema({  
   // User's email, required field and unique
   email: { type: String, required: true, unique: true },
   // Password for the user account, required field
@@ -45,11 +42,11 @@ try {
     const salt = await bcrypt.genSalt(10);
     // Hash the password with the generated salt and replace the plain text password with the hash
     this.password = await bcrypt.hash(this.password, salt);
-    logger.info(`New user registered: ${this.username}`);
+    logger.info(`New user registered: ${this.email}`);
     return next();
 } catch (error) {
     // Pass any errors that occur during hashing to the next middleware
-    logger.warn(`Failed login attempt for username: ${this.username}`);
+    logger.warn(`Failed login attempt for user: ${this.email}`);
     return next(error);
 }
 });

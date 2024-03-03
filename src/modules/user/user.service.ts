@@ -34,9 +34,18 @@ export class UserService {
     async findOne(id: string): Promise<User> {
         const user = await this.userModel.findById(id);
         if (!user) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
+            throw new NotFoundException(`User with ID "${id}" not found`);
         }
         return user;
+    }
+
+    /**
+     * Retrieve a user by their email and retrive the password.
+     * @param email The email of the user to retrieve.
+     * @returns The requested user.
+     */
+    async findByEmailWithPassword(email: string): Promise<User> {
+        return this.userModel.findOne({email}).select('+password');                 
     }
 
   /**

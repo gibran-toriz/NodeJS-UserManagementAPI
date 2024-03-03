@@ -4,14 +4,8 @@ import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 /**
  * Data transfer object for creating a user.
  */
-export class CreateUserDto {
-    /**
-     * The username of the user.
-     */
-    @ApiProperty({ example: 'user_test' })
-    @IsNotEmpty()    
-    readonly username: string;
-
+export class CreateUserDto {    
+    
     /**
      * The email of the user.
      */

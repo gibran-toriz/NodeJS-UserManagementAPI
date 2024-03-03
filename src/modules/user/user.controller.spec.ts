@@ -43,8 +43,7 @@ describe('UserController', () => {
     */     
     it('should create a user', async () => {
         const dto: CreateUserDto = {         
-            email: 'test@example.com',
-            username: 'testuser',
+            email: 'test@example.com',            
             password: 'password123',
             firstName: 'Test',
         };
@@ -62,7 +61,7 @@ describe('UserController', () => {
    * It verifies that the findAll method of the UserController finds all users.
    */
   it('should find all users', async () => {
-    const users = [{ id: '1', name: 'Test User', email: 'test@example.com' }];
+    const users = [{ id: '1', email: 'test@example.com' }];
     (service.findAll as jest.Mock).mockResolvedValue(users);            
 
     expect(await controller.findAll()).toEqual(users);
@@ -74,7 +73,7 @@ describe('UserController', () => {
    * It verifies that the findOne method of the UserController finds one user by ID.
    * */
   it('should find one user', async () => {
-    const user = { id: '1', name: 'Test User', email: 'test@example.com' };
+    const user = { id: '1', email: 'test@example.com' };
     (service.findOne as jest.Mock).mockResolvedValue(user); 
 
     expect(await controller.findOne('1')).toEqual(user);

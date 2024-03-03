@@ -4,8 +4,8 @@ export class LoginDto {
     /**
      * Username of the user     
      */
-    @ApiProperty({ example: 'usertest' })
-    username: string;
+    @ApiProperty({ example: 'usertest@example.com' })
+    email: string;
 
     /**
      * Password of the user     
