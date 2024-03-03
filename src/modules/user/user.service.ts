@@ -14,9 +14,8 @@ export class UserService {
    * @returns The created user.
    */
     async create(createUserDto: CreateUserDto): Promise<User> {
-        const newUser = new this.userModel(createUserDto);
-        await newUser.save();
-        return this.userModel.findById(newUser.id).exec();        
+        const newUser = await this.userModel.create(createUserDto);            
+        return this.userModel.findById(newUser.id);        
     }
 
   /**
@@ -24,7 +23,7 @@ export class UserService {
    * @returns An array of users.
    */
     async findAll(): Promise<User[]> {
-        return this.userModel.find().exec();
+        return this.userModel.find();
     }
 
   /**
@@ -33,7 +32,7 @@ export class UserService {
    * @returns The requested user.
    */
     async findOne(id: string): Promise<User> {
-        const user = await this.userModel.findById(id).exec();
+        const user = await this.userModel.findById(id);
         if (!user) {
         throw new NotFoundException(`User with ID "${id}" not found`);
         }
@@ -48,8 +47,7 @@ export class UserService {
    */
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
         const updatedUser = await this.userModel
-        .findByIdAndUpdate(id, updateUserDto, { new: true })
-        .exec();
+        .findByIdAndUpdate(id, updateUserDto, { new: true });
         if (!updatedUser) {
         throw new NotFoundException(`User with ID "${id}" not found`);
         }
@@ -62,7 +60,7 @@ export class UserService {
    * @returns The result of the deletion operation.
    */
     async delete(id: string): Promise<any> {
-        const result = await this.userModel.findByIdAndDelete(id).exec();
+        const result = await this.userModel.findByIdAndDelete(id);
         if (!result) {
             throw new NotFoundException(`User with ID "${id}" not found`);
         }

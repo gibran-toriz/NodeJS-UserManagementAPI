@@ -129,3 +129,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Sonar 
+sonar-project.properties
+reports/coverage
+reports/junit
+reports/test-results
+
+.scannerwork/
+```
