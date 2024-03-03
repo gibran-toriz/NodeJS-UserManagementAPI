@@ -52,9 +52,10 @@ describe('UserService', () => {
      */
     it('should create a user', async () => {
         const createUserDto: CreateUserDto = { username: 'testuser', password: 'testpassword', email: 'testemail', firstName: 'testfirstName' };
-        await service.create(createUserDto);
+        const createdUser = await service.create(createUserDto);
         expect(userModel.create).toHaveBeenCalled();
-        expect(userModel.findById).toHaveBeenCalled();
+        expect(userModel.findById).toHaveBeenCalled();   
+        expect(createdUser.password).not.toBe('password');        
     });
 
     /**
@@ -139,6 +140,5 @@ describe('UserService', () => {
 
         await expect(service.update(id, updateUserDto)).rejects.toThrow(NotFoundException);
     });
-
 
 });

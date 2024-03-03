@@ -136,5 +136,8 @@ reports/coverage
 reports/junit
 reports/test-results
 
+# Environment
+.DS_Store
 .scannerwork/
+.vscode/
 ```
