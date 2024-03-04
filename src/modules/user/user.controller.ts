@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { LoggingInterceptor } from '../../common/interceptors/response-logging.interceptor';
 
 /**
  * Controller for managing user operations.
  */
 @Controller('users')
+@UseInterceptors(new LoggingInterceptor())
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
