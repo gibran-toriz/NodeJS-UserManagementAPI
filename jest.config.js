@@ -25,6 +25,6 @@ module.exports = {
     ],
     testResultsProcessor: "jest-sonar-reporter",
     collectCoverage: true,
-    coverageReporters: ["lcov", "text", "text-summary"]
-
+    coverageReporters: ["lcov", "text", "text-summary"],
+    setupFilesAfterEnv: ['../test/jest.setup.js'],
   };

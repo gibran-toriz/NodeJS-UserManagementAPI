@@ -4,6 +4,8 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { AppModule } from './app.module';
 import { logger } from './config/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
+import { LoggingInterceptor } from './common/interceptors/response-logging.interceptor';
 
 // Load environment variables 
 require('dotenv').config();
@@ -22,12 +24,18 @@ async function bootstrap(): Promise<void> {
       { logger: false },
     );
 
+    // Apply middleware globally
+    app.use(new RequestLoggingMiddleware().use);
+
+    // Apply interceptor globally
+    app.useGlobalInterceptors(new LoggingInterceptor());
+
     // Set up Swagger for the application
     const config = new DocumentBuilder()
       .setTitle('User Management API')
       .setDescription('API for managing user data')
       .setVersion('0.1.0')
-      .build();    
+      .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api', app, document);
     

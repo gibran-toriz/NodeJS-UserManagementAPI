@@ -15,8 +15,7 @@ describe('UserService', () => {
 
     beforeEach(async () => {
         const mockUser = {
-            _id: 'a unique id',
-            username: 'testuser',
+            _id: 'a unique id',            
             password: 'testpassword',
             email: 'testemail',
             firstName: 'testfirstName',            
@@ -51,7 +50,7 @@ describe('UserService', () => {
      * It verifies that the create method of the UserService creates a user.
      */
     it('should create a user', async () => {
-        const createUserDto: CreateUserDto = { username: 'testuser', password: 'testpassword', email: 'testemail', firstName: 'testfirstName' };
+        const createUserDto: CreateUserDto = { email: 'testemail', password: 'testpassword', firstName: 'testfirstName' };
         const createdUser = await service.create(createUserDto);
         expect(userModel.create).toHaveBeenCalled();
         expect(userModel.findById).toHaveBeenCalled();   
@@ -93,10 +92,9 @@ describe('UserService', () => {
     it('should delete a user', async () => {
         const id = 'testid';
         const mockDeletedUser = {
-            _id: id,
-            username: 'testuser',
-            password: 'testpassword',
+            _id: id,            
             email: 'testemail',
+            password: 'testpassword',            
             firstName: 'testfirstName',
         };
         userModel.findByIdAndDelete = jest.fn().mockResolvedValue(mockDeletedUser);
@@ -113,12 +111,11 @@ describe('UserService', () => {
      */
     it('should update a user', async () => {
         const id = 'testid';
-        const updateUserDto: UpdateUserDto = { username: 'updateduser', password: 'updatedpassword', email: 'updatedemail', firstName: 'updatedfirstName' };
+        const updateUserDto: UpdateUserDto = { email: 'updatedemail', password: 'updatedpassword', firstName: 'updatedfirstName' };
         const mockUpdatedUser = {
-            _id: id,
-            username: updateUserDto.username,
-            password: updateUserDto.password,
+            _id: id,            
             email: updateUserDto.email,
+            password: updateUserDto.password,            
             firstName: updateUserDto.firstName,
         };
         userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(mockUpdatedUser);
@@ -135,7 +132,7 @@ describe('UserService', () => {
      */
     it('should throw an error if user not found during update', async () => {
         const id = 'testid';
-        const updateUserDto: UpdateUserDto = { username: 'updateduser', password: 'updatedpassword', email: 'updatedemail', firstName: 'updatedfirstName' };
+        const updateUserDto: UpdateUserDto = { email: 'updatedemail', password: 'updatedpassword', firstName: 'updatedfirstName' };
         userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
 
         await expect(service.update(id, updateUserDto)).rejects.toThrow(NotFoundException);

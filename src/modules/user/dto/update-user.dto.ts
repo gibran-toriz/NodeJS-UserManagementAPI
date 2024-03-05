@@ -4,13 +4,7 @@ import { IsEmail, IsOptional, MinLength } from 'class-validator';
 /**
  * Data transfer object for updating a user.
  */
-export class UpdateUserDto {
-    /**
-     * The username of the user. Optional.
-     */    
-    @ApiProperty({ example: 'user_test' })
-    @IsOptional()
-    readonly username?: string;
+export class UpdateUserDto {  
 
     /**
      * The email of the user. Optional.
