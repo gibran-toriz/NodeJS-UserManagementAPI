@@ -23,14 +23,14 @@ import {
           tap(() => {
             const { method, url } = request;
             const statusCode = response.statusCode;
-            const delay = Date.now() - now;
+            const diff = Date.now() - now;
+            const delay = diff % 1000;          
                                 
             try {
                 // Log the request and response details along with execution time
                 logger.info({ method, url, statusCode, delay }, 'Request processed');                
             } catch (error) {         
-                console.error('Logging error:', error);
-                // TODO: Fallback logging
+                console.error('Logging error:', error);                
             }                   
           }),
         );

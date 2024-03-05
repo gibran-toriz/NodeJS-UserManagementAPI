@@ -8,7 +8,6 @@ import { LoggingInterceptor } from '../../common/interceptors/response-logging.i
  * Controller for managing user operations.
  */
 @Controller('users')
-@UseInterceptors(new LoggingInterceptor())
 export class UserController {
     constructor(private readonly userService: UserService) {}
 

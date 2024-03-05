@@ -12,20 +12,19 @@ export class RequestLoggingMiddleware implements NestMiddleware {
  * @param next - The next middleware function.
  */
 use(req: Request, res: Response, next: NextFunction): void {
-    const { method, originalUrl } = req; 
+    const { method, originalUrl, hostname} = req; 
     const startAt = new Date().toISOString();
-    const ip = req.socket.remoteAddress;
 
     // Paths to exclude from logging
     const excludePaths = [ '/api' ];
+    const url = originalUrl;    
     
     // Only log if the path is not in the exclude list
-    if (!excludePaths.some(path => originalUrl.startsWith(path))) {
+    if (!excludePaths.some(path => url.startsWith(path))) {
         try {
-            logger.info({ method, originalUrl, startAt, ip }, 'Incoming request');    
+            logger.info({ method, url, startAt, hostname }, 'Incoming request');    
         } catch (error) {         
-            console.error('Logging error:', error);
-            // TODO: Fallback logging
+            console.error('Logging error:', error);            
         }        
     }
     
