@@ -72,7 +72,7 @@ export class UserService {
      */
     async findByEmailWithPassword(email: string): Promise<User> {
         try {
-            return this.userModel.findOne({email}).select('+password');           
+            return this.userModel.findOne({ email }).select('+password');          
         } catch (error) {     
             logger.error(`Failed to retrieve users: ${error.message}`);            
             throw new InternalServerErrorException('Failed to retrieve user');
