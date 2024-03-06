@@ -1,8 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { logger } from '../../config/logger';
+
 
 @Injectable()
 export class UserService {
@@ -14,8 +16,22 @@ export class UserService {
    * @returns The created user.
    */
     async create(createUserDto: CreateUserDto): Promise<User> {
-        const newUser = await this.userModel.create(createUserDto);            
-        return this.userModel.findById(newUser.id);        
+        try {
+            const newUser = await this.userModel.create(createUserDto);            
+            logger.info(`New user registered: ${newUser.email}`);
+            return this.userModel.findById(newUser.id);
+        } catch (error) {
+            if (error.name === 'ValidationError') {
+                logger.error(`Failed to create user: ${error.message}`);
+                throw new BadRequestException(error.message);
+            } else if (error.code === 11000) {
+                logger.error(`User ${createUserDto.email} already exists.`);
+                throw new ConflictException('Duplicate key error');
+            } else {
+                logger.error(`Failed to create user: ${error.message}`);
+                throw new InternalServerErrorException();
+            } 
+        }        
     }
 
   /**
@@ -23,7 +39,12 @@ export class UserService {
    * @returns An array of users.
    */
     async findAll(): Promise<User[]> {
-        return this.userModel.find();
+        try {
+            return this.userModel.find();
+        } catch (error) {            
+            logger.error(`Failed to retrieve users: ${error.message}`);            
+            throw new InternalServerErrorException('Failed to retrieve users');
+        }
     }
 
   /**
@@ -32,11 +53,16 @@ export class UserService {
    * @returns The requested user.
    */
     async findOne(id: string): Promise<User> {
-        const user = await this.userModel.findById(id);
-        if (!user) {
-            throw new NotFoundException(`User with ID "${id}" not found`);
-        }
-        return user;
+        try {
+            const user = await this.userModel.findById(id);
+            if (!user) {
+                throw new NotFoundException(`User with ID "${id}" not found`);
+            }
+            return user;
+        } catch (error) {            
+            logger.error(`Failed to retrieve user: ${error.message}`);            
+            throw new InternalServerErrorException('Failed to retrieve users');
+        }        
     }
 
     /**
@@ -45,7 +71,12 @@ export class UserService {
      * @returns The requested user.
      */
     async findByEmailWithPassword(email: string): Promise<User> {
-        return this.userModel.findOne({email}).select('+password');                 
+        try {
+            return this.userModel.findOne({email}).select('+password');           
+        } catch (error) {     
+            logger.error(`Failed to retrieve users: ${error.message}`);            
+            throw new InternalServerErrorException('Failed to retrieve user');
+        }           
     }
 
   /**
@@ -55,12 +86,24 @@ export class UserService {
    * @returns The updated user.
    */
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-        const updatedUser = await this.userModel
-        .findByIdAndUpdate(id, updateUserDto, { new: true });
-        if (!updatedUser) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
+        try {
+            const updatedUser = await this.userModel
+            .findByIdAndUpdate(id, updateUserDto, { new: true });
+            if (!updatedUser) {
+                logger.error(`User with ID "${id}" not found`);            
+                throw new NotFoundException(`User with ID "${id}" not found`);
+            }
+            logger.info(`User with ID "${id}" updated successfully`);
+            return updatedUser;
+        } catch (error) {            
+            if (error.name === 'ValidationError') {                
+                logger.error(`Failed to update user": ${error.message}`); 
+                throw new BadRequestException(error.message);
+            } else {
+                logger.error(`Failed to update user with ID "${id}": ${error.message}`);
+                throw new InternalServerErrorException('Failed to update user');
+            }
         }
-        return updatedUser;
     }
 
   /**
@@ -69,11 +112,19 @@ export class UserService {
    * @returns The result of the deletion operation.
    */
     async delete(id: string): Promise<any> {
-        const result = await this.userModel.findByIdAndDelete(id);
-        if (!result) {
-            throw new NotFoundException(`User with ID "${id}" not found`);
+        try {
+            const result = await this.userModel.findByIdAndDelete(id);
+            if (!result) {
+                logger.error(`User with ID "${id}" not found`);
+                throw new NotFoundException(`User with ID "${id}" not found`);
+            }
+            logger.info(`User with ID "${id}" deleted successfully`);
+            return result;    
+        } catch (error) {
+            logger.error(`Failed to delete user with ID "${id}": ${error.message}`, error.stack);
+            throw new InternalServerErrorException('Failed to delete user');
         }
-        return result;    
+        
     }
 
 }

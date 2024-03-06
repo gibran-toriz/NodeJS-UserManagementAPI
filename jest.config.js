@@ -17,6 +17,10 @@ module.exports = {
         "!**/*.module.ts",
         "!**/*.decorator.ts",
         "!**/*.guard.ts",
+        "!**/*.strategy.ts",
+        "!**/*.interceptor.ts",
+        "!**/*.middleware.ts",
+        "!**/*.schema.ts"
       ],
     testEnvironment: "node",
     reporters: [

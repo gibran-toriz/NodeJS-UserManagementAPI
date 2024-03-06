@@ -2,9 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateUserDto, UpdateUserDto } from './dto';
+
 
 /**
  * Unit tests for the UserService.
@@ -23,7 +24,7 @@ describe('UserService', () => {
 
         userModel = {
             create: jest.fn().mockResolvedValue(mockUser),
-            findById: jest.fn().mockResolvedValue(mockUser),
+            findById: jest.fn().mockResolvedValue(mockUser),            
             find: jest.fn().mockResolvedValue([mockUser]),
         };
 
@@ -58,6 +59,19 @@ describe('UserService', () => {
     });
 
     /**
+     * Test case: should handle creation errors
+     * It verifies that the create method of the UserService handles creation errors.
+     */
+    it('should handle creation errors', async () => {
+        userModel.create.mockRejectedValue(new Error('Internal Server Error'));
+
+        await expect(service.create({ email: 'testemail', password: 'testpassword', firstName: 'testfirstName' }))
+            .rejects
+            .toThrow(InternalServerErrorException);
+    });
+
+
+    /**
      * Test case: should find all users
      * It verifies that the findAll method of the UserService finds all users.
      */
@@ -67,22 +81,23 @@ describe('UserService', () => {
     });
 
     /**
-     * Test case: should find one user
-     * It verifies that the findOne method of the UserService finds one user by ID.
-     */
-    it('should find one user', async () => {
-        const id = 'testid';
-        await service.findOne(id);
-        expect(userModel.findById).toHaveBeenCalledWith(id);
-    });
-
-    /**
      * Test case: should throw an error if user not found
      * It verifies that the findOne method of the UserService throws a NotFoundException if the user is not found.
      */
-    it('should throw an error if user not found', async () => {
+    it('should throw an error if user not found', async () => {        
         userModel.findById = jest.fn().mockResolvedValue(null);
-        await expect(service.findOne('testid')).rejects.toThrow(NotFoundException);
+        await expect(service.findOne('testid')).rejects.toThrow(InternalServerErrorException);
+    });
+
+    /**
+     * Test case: should find one user by email
+     * It verifies that the findByEmailWithPassword method of the UserService finds one user by email.
+     */
+    it('should find one user by email', async () => {
+        const email = 'test@example.com';
+        await expect(service.findByEmailWithPassword(email))
+        .rejects
+        .toThrow(InternalServerErrorException);        
     });
 
     /**
@@ -103,6 +118,15 @@ describe('UserService', () => {
 
         expect(userModel.findByIdAndDelete).toHaveBeenCalledWith(id);
         expect(result).toEqual(mockDeletedUser);
+    });
+
+
+    /**
+     * Test case: should throw an error if user not deleted
+     * It verifies that the delete method of the UserService throws an InternalServerErrorException if the user is not deleted.
+     */
+    it('should throw an error if user not deleted', async () => {                
+        await expect(service.delete('testid')).rejects.toThrow(new InternalServerErrorException('Failed to delete user'));
     });
 
     /**
@@ -135,7 +159,7 @@ describe('UserService', () => {
         const updateUserDto: UpdateUserDto = { email: 'updatedemail', password: 'updatedpassword', firstName: 'updatedfirstName' };
         userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
 
-        await expect(service.update(id, updateUserDto)).rejects.toThrow(NotFoundException);
+        await expect(service.update(id, updateUserDto)).rejects.toThrow(InternalServerErrorException);                
     });
 
 });

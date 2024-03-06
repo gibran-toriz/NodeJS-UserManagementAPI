@@ -41,12 +41,10 @@ try {
     // Generate a salt for hashing
     const salt = await bcrypt.genSalt(10);
     // Hash the password with the generated salt and replace the plain text password with the hash
-    this.password = await bcrypt.hash(this.password, salt);
-    logger.info(`New user registered: ${this.email}`);
+    this.password = await bcrypt.hash(this.password, salt);    
     return next();
-} catch (error) {
-    // Pass any errors that occur during hashing to the next middleware
-    logger.warn(`Failed login attempt for user: ${this.email}`);
+} catch (error) {    
+    logger.error(`Failed login attempt for user: ${this.email}`);
     return next(error);
 }
 });
