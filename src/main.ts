@@ -6,6 +6,7 @@ import { logger } from './config/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { LoggingInterceptor } from './common/interceptors/response-logging.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 // Load environment variables 
 require('dotenv').config();
@@ -23,6 +24,13 @@ async function bootstrap(): Promise<void> {
       new FastifyAdapter(),
       { logger: false },
     );
+
+    // Apply validations globally
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      transform: true,      
+      disableErrorMessages: false,
+    }));
 
     // Apply middleware globally
     app.use(new RequestLoggingMiddleware().use);
