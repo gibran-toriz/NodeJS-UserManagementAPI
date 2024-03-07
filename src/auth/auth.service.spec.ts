@@ -96,11 +96,11 @@ describe('AuthService', () => {
          * It verifies that the login method generates an access token for the user.
          */
         it('should generate an access token for the user', async () => {
-            const user = { email: 'test@example.com', sub: 'userId' }; 
+            const user = { email: 'test@example.com', sub: 'userId', _id: 'userId', roles: ['user']}; 
             const accessToken = await authService.login(user);
     
             expect(accessToken).toEqual({ accessToken: 'mockAccessToken' }); 
-            expect(jwtService.sign).toHaveBeenCalledWith(expect.anything()); 
+            expect(jwtService.sign).toHaveBeenCalledWith(expect.objectContaining({ email: 'test@example.com' })); 
         });
 
         /**
@@ -111,6 +111,7 @@ describe('AuthService', () => {
             const user = {
                 email: 'testemail',
                 roles: ['user'],                
+                _id: 'userId',
             };
 
             jwtService.sign.mockImplementation(() => {

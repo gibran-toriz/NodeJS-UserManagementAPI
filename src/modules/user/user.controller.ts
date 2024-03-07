@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schemas/user.schema';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 /**
  * Controller for managing user operations.
@@ -17,7 +18,7 @@ export class UserController {
      * @param createUserDto - The data for creating a new user.
      * @returns The created user.
      */
-    @Post()
+    @Post('register')
     async create(@Body() createUserDto: CreateUserDto): Promise<User> {
         return this.userService.create(createUserDto);
     }
@@ -26,6 +27,8 @@ export class UserController {
      * Get all users.
      * @returns An array of users.
      */
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
     @Get()
     async findAll(): Promise<User[]> {
         return this.userService.findAll();
@@ -36,6 +39,8 @@ export class UserController {
      * @param id - The ID of the user to retrieve.
      * @returns The user with the specified ID.
      */
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<User> {
         return this.userService.findOne(id);
@@ -47,6 +52,8 @@ export class UserController {
      * @param updateUserDto - The data for updating the user.
      * @returns The updated user.
      */
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
     @Put(':id')
     async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
         return this.userService.update(id, updateUserDto);
@@ -57,6 +64,8 @@ export class UserController {
      * @param id - The ID of the user to delete.
      * @returns The deleted user.
      */
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
     @Delete(':id')
     async delete(@Param('id') id: string): Promise<User> {
         return this.userService.delete(id);
