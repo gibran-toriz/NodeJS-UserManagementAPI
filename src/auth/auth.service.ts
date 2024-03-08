@@ -45,7 +45,7 @@ export class AuthService {
         const payload = { 
             iss: 'example.company.com',
             sub: user._id.toString(),
-            roles: user.roles || ['user'],
+            roles: (user.roles && user.roles.length > 0) ? user.roles : ['user'],            
             email: user.email,            
         };
         

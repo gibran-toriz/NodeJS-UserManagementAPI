@@ -30,6 +30,8 @@ export const UserSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   // Last name of the user, optional field
   lastName: { type: String, required: false },  
+  // Roles assigned to the user
+  roles: { type: [String], required: true},
 });
 
 // Pre-save hook that executes before a User document is saved to the database

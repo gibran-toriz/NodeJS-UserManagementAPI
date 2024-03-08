@@ -17,8 +17,16 @@ export class UserService {
    */
     async create(createUserDto: CreateUserDto): Promise<User> {
         try {
-            const newUser = await this.userModel.create(createUserDto);            
+            // Set the default role for new users
+            const defaultRole = ['user'];
+            const userWithRole = { ...createUserDto, roles: defaultRole };
+
+            // Create the new user            
+            const newUser = await this.userModel.create(userWithRole);            
+
             logger.info(`New user registered: ${newUser.email}`);
+            // Return the newly created user
+            
             return this.userModel.findById(newUser.id);
         } catch (error) {
             if (error.name === 'ValidationError') {
