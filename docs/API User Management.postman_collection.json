@@ -1,0 +1,1902 @@
+{
+	"info": {
+		"_postman_id": "53eb7587-45b2-482b-9e6c-7123a49b05d5",
+		"name": "API User Management",
+		"description": "### API Overview\n\nWelcome to the User Management API, a backend solution designed to handle user accounts and their related operations.\n\n**Key Features:**\n\n- **User Registration:** Allows new users to create accounts by providing essential information such as email, password, and names. Each user is assigned a default role, ensuring secure access control from the outset.\n- **Authentication:** Utilizes JWT (JSON Web Tokens) for secure authentication, enabling users to log in and access protected routes based on their roles.\n- **User CRUD Operations:** Authenticated users can perform Create, Read, Update, and Delete operations on their accounts. Role-based access control is enforced, allowing administrators additional capabilities like managing other users.\n- **Security:** Implements best practices for security, including password hashing, input validation, and protection against common web vulnerabilities to ensure user data is securely managed.\n    \n\n**Authentication:**\n\nAll protected routes require a valid JWT, obtained upon successful login, to be included in the request header as `Authorization: Bearer` . Ensure to replace with your actual JWT.\n\n**Base URL:**\n\nThe base URL for all API endpoints is `https://xxxxxx/api`. Append the specific endpoint routes to the base URL for your requests.\n\n**Contact:**\n\nFor any issues or further inquiries, please contact the API support team at `gibran.toriz@gmail.com`.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1376156"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Authenticate Admin User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();",
+									"pm.environment.set(\"access_token_admin\", res.accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{admin_user}}\",\n  \"password\": \"{{admin_pass}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "### Auth Login\n\nThis endpoint is used to authenticate and login a user.\n\n**Request Body**\n\n- email (text, required): The email of the user.\n- password (text, required): The password of the user.\n    \n\n**Response**\n\n- Status: 201 Created\n- Content-Type: application/json\n- accessToken (string): The access token for the authenticated user."
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"strongPassword123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "289"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:28:20 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlLmNvbXBhbnkuY29tIiwic3ViIjoiNjVlYjk4MTA2NzEyYzA5N2QxYjY4NmI1Iiwicm9sZXMiOlsiYWRtaW4iXSwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImlhdCI6MTcwOTk0MDUwMCwiZXhwIjoxNzA5OTQwNTYwfQ.rBV_4fpaIGoC_cv8fa_2ZTlPNVOndacyOttgTMndZUs\"\n}"
+						},
+						{
+							"name": "Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"email\",\n  \"password\": \"user\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "73"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:29:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid credentials\",\n    \"error\": \"Unauthorized\",\n    \"statusCode\": 401\n}"
+						}
+					]
+				},
+				{
+					"name": "Authenticate Regular User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const res = pm.response.json();",
+									"pm.environment.set(\"access_token_user\", res.accessToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{email_user}}\",\n  \"password\": \"{{password_user}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"strongPassword123\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "286"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:59:35 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJleGFtcGxlLmNvbXBhbnkuY29tIiwic3ViIjoiNjVlYjk5Njg2NzEyYzA5N2QxYjY4NmJiIiwicm9sZXMiOlsidXNlciJdLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJpYXQiOjE3MDk5NDIzNzUsImV4cCI6MTcwOTk0MjQzNX0.9rRJwauoBoPkinapKRtmEiBIqChY0U1hPcOoQZPiRpY\"\n}"
+						},
+						{
+							"name": "Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"{{regular_user}}\",\n  \"password\": \"pass\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "73"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:59:58 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid credentials\",\n    \"error\": \"Unauthorized\",\n    \"statusCode\": 401\n}"
+						}
+					]
+				}
+			],
+			"description": "The `/auth` endpoint in the User Management API is designed for authentication-related tasks. It primarily includes a `POST` method at `/auth/login` that utilizes `LocalAuthGuard` to handle user logins.\n\nWhen a user submits their login credentials through this endpoint, the `AuthService` processes the authentication, verifies the credentials, and, upon success, returns a JWT for accessing protected routes.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const res = pm.response.json();",
+									"    pm.environment.set(\"id_user\", res._id);",
+									"    pm.environment.set(\"email_user\", res.email);",
+									"",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    const password = requestBody.password;",
+									"    pm.environment.set(\"password_user\", password);",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"\",\n  \"password\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"register"
+							]
+						},
+						"description": "This POST endpoint allows users to register by providing essential information, such as email, password, first name, and optionally, last name.\n\nThis endpoint is accessible without authentication, enabling new users to register by them selfs."
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"test_user2@example.com\",\n  \"password\": \"strongPassword123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "150"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:23:11 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_id\": \"65eb9ddd6712c097d1b686d3\",\n    \"email\": \"test_user2@example.com\",\n    \"firstName\": \"Test\",\n    \"roles\": [\n        \"user\"\n    ],\n    \"createdAt\": \"2024-03-08T23:23:09.860Z\",\n    \"__v\": 0\n}"
+						},
+						{
+							"name": "Error Response (Incomplete)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"test_user@example.com\",  \n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "139"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:23:54 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"password must be longer than or equal to 8 characters\",\n        \"password should not be empty\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						},
+						{
+							"name": "Error Response (Validation)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"test_user@example\",\n  \"password\": \"strongPassword123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "77"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:24:18 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"email must be an email\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						},
+						{
+							"name": "Error Duplicated",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"strongPassword123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "69"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 08 Mar 2024 23:24:34 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Duplicate key error\",\n    \"error\": \"Conflict\",\n    \"statusCode\": 409\n}"
+						}
+					]
+				},
+				{
+					"name": "Get users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token_admin}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer ",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "1980"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:00:58 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"roles\": [],\n        \"_id\": \"65e7bd64a9908a57e1cd2ff4\",\n        \"email\": \"user.tes3@example.com\",\n        \"firstName\": \"User3\",\n        \"lastName\": \"Test\",\n        \"createdAt\": \"2024-03-06T00:48:36.109Z\",\n        \"__v\": 0\n    },\n    {\n        \"roles\": [],\n        \"_id\": \"65e7bd87a9908a57e1cd2ff9\",\n        \"email\": \"user.tes@example.com\",\n        \"firstName\": \"User\",\n        \"lastName\": \"Test\",\n        \"createdAt\": \"2024-03-06T00:49:11.454Z\",\n        \"__v\": 0\n    },\n    {\n        \"roles\": [],\n        \"_id\": \"65e7bd90a9908a57e1cd2ffc\",\n        \"email\": \"user.tes2@example.com\",\n        \"firstName\": \"User3\",\n        \"lastName\": \"Test\",\n        \"createdAt\": \"2024-03-06T00:49:20.422Z\",\n        \"__v\": 0\n    },\n    {\n        \"roles\": [],\n        \"_id\": \"65e9ad72ecec8f0490cdd979\",\n        \"email\": \"user.test.1@example\",\n        \"firstName\": \"User\",\n        \"lastName\": \"Test\",\n        \"createdAt\": \"2024-03-07T12:05:06.116Z\",\n        \"__v\": 0\n    },\n    {\n        \"roles\": [],\n        \"_id\": \"65e9aff562f98ba913530099\",\n        \"email\": \"user.test.1@example.com\",\n        \"firstName\": \"User\",\n        \"createdAt\": \"2024-03-07T12:15:49.280Z\",\n        \"__v\": 0\n    },\n    {\n        \"roles\": [],\n        \"_id\": \"65e9b787c146bc2f5c0fbd0d\",\n        \"email\": \"gibran@example.com\",\n        \"firstName\": \"Test\",\n        \"createdAt\": \"2024-03-07T12:48:07.893Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65e9b8d6474ce9aba39cea57\",\n        \"email\": \"gibran2@example.com\",\n        \"firstName\": \"Test\",\n        \"roles\": [\n            \"admin\"\n        ],\n        \"createdAt\": \"2024-03-07T12:53:42.359Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65eb98106712c097d1b686b5\",\n        \"email\": \"admin@example.com\",\n        \"firstName\": \"Admin\",\n        \"roles\": [\n            \"admin\"\n        ],\n        \"createdAt\": \"2024-03-08T22:58:24.800Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65eb99686712c097d1b686bb\",\n        \"email\": \"user@example.com\",\n        \"firstName\": \"User\",\n        \"roles\": [\n            \"user\"\n        ],\n        \"createdAt\": \"2024-03-08T23:04:08.131Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65eb9aeb6712c097d1b686c2\",\n        \"email\": \"test_user@example.com\",\n        \"firstName\": \"Test\",\n        \"roles\": [\n            \"user\"\n        ],\n        \"createdAt\": \"2024-03-08T23:10:35.972Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65eb9dcc6712c097d1b686d0\",\n        \"email\": \"test_user1@example.com\",\n        \"firstName\": \"Test\",\n        \"roles\": [\n            \"user\"\n        ],\n        \"createdAt\": \"2024-03-08T23:22:52.983Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65eb9ddd6712c097d1b686d3\",\n        \"email\": \"test_user2@example.com\",\n        \"firstName\": \"Test\",\n        \"roles\": [\n            \"user\"\n        ],\n        \"createdAt\": \"2024-03-08T23:23:09.860Z\",\n        \"__v\": 0\n    },\n    {\n        \"_id\": \"65eb9e536712c097d1b686d8\",\n        \"email\": \"test_user3@example.com\",\n        \"firstName\": \"Test\",\n        \"roles\": [\n            \"user\"\n        ],\n        \"createdAt\": \"2024-03-08T23:25:07.860Z\",\n        \"__v\": 0\n    }\n]"
+						},
+						{
+							"name": "Error Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer ",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "43"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:01:27 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Unauthorized\",\n    \"statusCode\": 401\n}"
+						},
+						{
+							"name": "Error Forbidden Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "69"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:46:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Forbidden resource\",\n    \"error\": \"Forbidden\",\n    \"statusCode\": 403\n}"
+						}
+					]
+				},
+				{
+					"name": "Get user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token_user}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/users/{{id_user}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"{{id_user}}"
+							]
+						},
+						"description": "This endpoint makes an HTTP GET request to retrieve user information based on the provided user ID. The response will be in JSON format and will include the user's ID, email, first name, roles, creation timestamp, and version. Below are some examples of the response for this request:\n\n``` json\n{\n    \"_id\":\"\",\n    \"email\":\"\",\n    \"firstName\":\"\",\n    \"roles\":[\"\"],\n    \"createdAt\":\"\",\n    \"__v\":0\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer "
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65eba7be6712c097d1b68703",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65eba7be6712c097d1b68703"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "150"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:06:02 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_id\": \"65eba7be6712c097d1b68703\",\n    \"email\": \"test_user5@example.com\",\n    \"firstName\": \"Test\",\n    \"roles\": [\n        \"user\"\n    ],\n    \"createdAt\": \"2024-03-09T00:05:18.831Z\",\n    \"__v\": 0\n}"
+						},
+						{
+							"name": "Inernal Error Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_admin}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65eba7be6712c097d1b6870",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65eba7be6712c097d1b6870"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "86"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:24:25 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Failed to retrieve user\",\n    \"error\": \"Internal Server Error\",\n    \"statusCode\": 500\n}"
+						},
+						{
+							"name": "Not found Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_admin}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65eba7be6712c097d1b68705",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65eba7be6712c097d1b68705"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "102"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:24:50 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User with ID \\\"65eba7be6712c097d1b68705\\\" not found\",\n    \"error\": \"Not Found\",\n    \"statusCode\": 404\n}"
+						},
+						{
+							"name": "Forbidden Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65e7bd64a9908a57e1cd2ff4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65e7bd64a9908a57e1cd2ff4"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "69"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:48:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Forbidden resource\",\n    \"error\": \"Forbidden\",\n    \"statusCode\": 403\n}"
+						},
+						{
+							"name": "Successful Admin Reponse",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_admin}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65e7bd64a9908a57e1cd2ff4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65e7bd64a9908a57e1cd2ff4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "162"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 00:50:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"roles\": [],\n    \"_id\": \"65e7bd64a9908a57e1cd2ff4\",\n    \"email\": \"user.tes3@example.com\",\n    \"firstName\": \"User3\",\n    \"lastName\": \"Test\",\n    \"createdAt\": \"2024-03-06T00:48:36.109Z\",\n    \"__v\": 0\n}"
+						}
+					]
+				},
+				{
+					"name": "Update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    const password = requestBody.password;",
+									"    pm.environment.set(\"password_user\", password);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token_user}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n  \"password\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/{{id_user}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"{{id_user}}"
+							]
+						},
+						"description": "This endpoint allows you to update user information using the user's ID. The request should be sent as an HTTP PUT to [http://localhost:3000/users/{{id_user}}](http://localhost:3000/users/{{id_user}}). The request body should be in raw format and include the following parameters:\n\n- \"password\": (string) The user's new password\n- \"firstName\": (string) The user's new first name\n- \"lastName\": (string) The user's new last name\n    \n\n### Response\n\nThe response will include the updated user information with the following fields:\n\n- \"_id\": The user's ID\n- \"email\": The user's email address\n- \"firstName\": The user's first name\"lastName\": The user's last name\n    \n- \"roles\": An array of user roles\n    \n- \"createdAt\": The timestamp of user creation\n    \n- \"__v\": Version control field\n    \n\n#### Example Response\n\n``` json\n{\n  \"_id\": \"\",\n  \"email\": \"\",\n  \"firstName\": \"\",\n  \"roles\": [\"\"],\n  \"createdAt\": \"\",\n  \"__v\": 0,\n  \"lastName\": \"\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n  \"password\": \"new_password\",\n  \"firstName\": \"new_name\",\n  \"lastName\": \"new_last_name\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/{{id_user}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{id_user}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "187"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:07:53 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_id\": \"65ebb62c899749a480e7e230\",\n    \"email\": \"test_user_update@example.com\",\n    \"firstName\": \"new_name\",\n    \"roles\": [\n        \"user\"\n    ],\n    \"createdAt\": \"2024-03-09T01:06:52.042Z\",\n    \"__v\": 0,\n    \"lastName\": \"new_last_name\"\n}"
+						},
+						{
+							"name": "Error Response (Validation)",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n  \"password\": \"123\",\n  \"firstName\": \"new_name\",\n  \"lastName\": \"new_last_name\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/{{id_user}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{id_user}}"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "108"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:17:36 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": [\n        \"password must be longer than or equal to 8 characters\"\n    ],\n    \"error\": \"Bad Request\",\n    \"statusCode\": 400\n}"
+						},
+						{
+							"name": "Forbidden Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n  \"password\": \"123\",\n  \"firstName\": \"new_name\",\n  \"lastName\": \"new_last_name\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/65e7bd64a9908a57e1cd2ff4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65e7bd64a9908a57e1cd2ff4"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "69"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:18:01 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Forbidden resource\",\n    \"error\": \"Forbidden\",\n    \"statusCode\": 403\n}"
+						},
+						{
+							"name": "Successful Admin Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_admin}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{  \n  \"password\": \"12345678\",\n  \"firstName\": \"new_name\",\n  \"lastName\": \"new_last_name\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/users/65e7bd64a9908a57e1cd2ff4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65e7bd64a9908a57e1cd2ff4"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "174"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:18:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"roles\": [],\n    \"_id\": \"65e7bd64a9908a57e1cd2ff4\",\n    \"email\": \"user.tes3@example.com\",\n    \"firstName\": \"new_name\",\n    \"lastName\": \"new_last_name\",\n    \"createdAt\": \"2024-03-06T00:48:36.109Z\",\n    \"__v\": 0\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token_user}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/users/{{id_user}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"{{id_user}}"
+							]
+						},
+						"description": "This endpoint sends an HTTP DELETE request to delete a user with the specified ID. The response will have a status code of 200 and a content type of application/json. The response body will include the details of the deleted user, such as their ID, email, first name, roles, creation timestamp, and version. Below are examples of the response for this request:\n\nExample:\n\n``` json\n{\n  \"_id\": \"\",\n  \"email\": \"\",\n  \"firstName\": \"\",\n  \"lastName\": \"\",\n  \"roles\": [\"\"],\n  \"createdAt\": \"\",\n  \"__v\": 0\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Inernal Error Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/{{id_user}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{id_user}}"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "84"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:23:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Failed to delete user\",\n    \"error\": \"Internal Server Error\",\n    \"statusCode\": 500\n}"
+						},
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/{{id_user}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{id_user}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "167"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:24:48 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_id\": \"65ebb8972c8e7d90d2b1f1b2\",\n    \"email\": \"test_user_update4@example.com\",\n    \"firstName\": \"name\",\n    \"lastName\": \"last_name\",\n    \"roles\": [\n        \"user\"\n    ],\n    \"createdAt\": \"2024-03-09T01:17:11.033Z\",\n    \"__v\": 0\n}"
+						},
+						{
+							"name": "Not found Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/{{id_user}}",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"{{id_user}}"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "102"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:32:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User with ID \\\"65ebbc245570dd1cfc15e165\\\" not found\",\n    \"error\": \"Not Found\",\n    \"statusCode\": 404\n}"
+						},
+						{
+							"name": "Forbidden Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_user}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65e9b8d6474ce9aba39cea57",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65e9b8d6474ce9aba39cea57"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "69"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:33:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Forbidden resource\",\n    \"error\": \"Forbidden\",\n    \"statusCode\": 403\n}"
+						},
+						{
+							"name": "Successful Admin Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{access_token_admin}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/users/65e9b8d6474ce9aba39cea57",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"users",
+										"65e9b8d6474ce9aba39cea57"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "content-length",
+									"value": "148"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 09 Mar 2024 01:34:24 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=72"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"_id\": \"65e9b8d6474ce9aba39cea57\",\n    \"email\": \"gibran2@example.com\",\n    \"firstName\": \"Test\",\n    \"roles\": [\n        \"admin\"\n    ],\n    \"createdAt\": \"2024-03-07T12:53:42.359Z\",\n    \"__v\": 0\n}"
+						}
+					]
+				}
+			],
+			"description": "The `/users` endpoint in the User Management API is designed for user account operations.\n\nIt supports creating new users through registration, viewing all user accounts (admin-only function), retrieving specific user details, updating user information, and deleting user accounts.\n\nSecurity is enforced through JWT authentication and role-based access control, ensuring operations like viewing and updating user details are restricted to authorized users."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://farming-simulator.pstmn.io"
+		},
+		{
+			"key": "admin_user",
+			"value": "admin@example.com",
+			"type": "string"
+		},
+		{
+			"key": "admin_pass",
+			"value": "strongPassword123",
+			"type": "string"
+		},
+		{
+			"key": "regular_user",
+			"value": "user@example.com",
+			"type": "string"
+		},
+		{
+			"key": "regular_pass",
+			"value": "strongPassword123",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "65eb99686712c097d1b686bb"
+		}
+	]
+}
