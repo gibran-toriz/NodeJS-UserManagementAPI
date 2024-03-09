@@ -55,5 +55,5 @@ jobs:
           git add VERSION
           git commit -m "Bump version to ${NEW_VERSION}"            
           git fetch
-          git rebase origin/main
-          git push origin HEAD:main
+          git rebase origin/develop
+          git push origin HEAD:develop
