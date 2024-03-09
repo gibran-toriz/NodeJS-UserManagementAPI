@@ -48,6 +48,11 @@ jobs:
           region: ${{ secrets.AWS_REGION }}
           deployment_package: deploy.zip
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch    
+        
       - name: Commit and push the new version
         run: |
           git config --local user.email ${{ secrets.GIT_HUB_EMAIL }}
@@ -55,5 +60,5 @@ jobs:
           git add VERSION
           git commit -m "Bump version to ${NEW_VERSION}"            
           git fetch
-          git rebase origin/develop
-          git push origin HEAD:develop
+          git rebase origin/${{ steps.extract_branch.outputs.branch }}
+          git push origin HEAD:${{ steps.extract_branch.outputs.branch }}
