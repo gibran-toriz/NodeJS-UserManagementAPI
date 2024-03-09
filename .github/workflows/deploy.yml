@@ -1,0 +1,59 @@
+name: Deploy to AWS EB
+
+on:  
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  npm-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+  
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Read the current version
+        id: current_version
+        run: |
+          echo "CURRENT_VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
+      - name: Increment the version
+        id: new_version
+        run: |          
+          # This script assumes the version format is vX.Y.Z
+          # Extract the major, minor, and patch parts of the version
+          VERSION_ARRAY=( ${CURRENT_VERSION//./ } )
+          V_MAJOR=${VERSION_ARRAY[0]}
+          V_MINOR=${VERSION_ARRAY[1]}
+          V_PATCH=${VERSION_ARRAY[2]}
+          # Increment the patch version
+          let V_PATCH=V_PATCH+1
+          # Construct the new version string for
+          NEW_VERSION="${V_MAJOR}.${V_MINOR}.${V_PATCH}"
+          echo $NEW_VERSION > VERSION
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "var version: $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: User Management API
+          environment_name: UserManagementAPI-dev
+          version_label: ${{ steps.new_version.outputs.version }}
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: deploy.zip
+
+      - name: Commit and push the new version
+        run: |
+          git config --local user.email ${{ secrets.GIT_HUB_EMAIL }}
+          git config --local user.name ${{ secrets.GIT_HUB_USERNAME }}            
+          git add VERSION
+          git commit -m "Bump version to ${NEW_VERSION}"            
+          git fetch
+          git rebase origin/main
+          git push origin HEAD:main

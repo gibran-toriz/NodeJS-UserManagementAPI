@@ -8,6 +8,9 @@ import { logger } from '../../config/logger';
 
 @Injectable()
 export class UserService {
+    // Action to log
+    readonly action = 'user-service';
+
     constructor(@InjectModel('User') private userModel: Model<User>) {}
 
   /**
@@ -24,19 +27,19 @@ export class UserService {
             // Create the new user            
             const newUser = await this.userModel.create(userWithRole);            
 
-            logger.info(`New user registered: ${newUser.email}`);
+            logger.info({ action: this.action },`New user registered: ${newUser.email}`);
             // Return the newly created user
             
             return this.userModel.findById(newUser.id);
         } catch (error) {
             if (error.name === 'ValidationError') {
-                logger.error(`Failed to create user: ${error.message}`);
+                logger.error({ action: this.action },`Failed to create user: ${error.message}`);
                 throw new BadRequestException(error.message);
             } else if (error.code === 11000) {
-                logger.error(`User ${createUserDto.email} already exists.`);
+                logger.error({ action: this.action },`User ${createUserDto.email} already exists.`);
                 throw new ConflictException('Duplicate key error');
             } else {
-                logger.error(`Failed to create user: ${error.message}`);
+                logger.error({ action: this.action },`Failed to create user: ${error.message}`);
                 throw new InternalServerErrorException();
             } 
         }        
@@ -48,9 +51,11 @@ export class UserService {
    */
     async findAll(): Promise<User[]> {
         try {
-            return this.userModel.find();
+            const users = await this.userModel.find();
+            logger.info({ action: this.action },`Users Found.`);
+            return users;            
         } catch (error) {            
-            logger.error(`Failed to retrieve users: ${error.message}`);            
+            logger.error({ action: this.action },`Failed to retrieve users: ${error.message}`);            
             throw new InternalServerErrorException('Failed to retrieve users');
         }
     }
@@ -65,15 +70,15 @@ export class UserService {
         try {
             user = await this.userModel.findById(id);
         } catch (error) {
-            logger.error(`Failed to retrieve user: ${error.message}`);
+            logger.error({ action: this.action },`Failed to retrieve user: ${error.message}`);
             throw new InternalServerErrorException('Failed to retrieve user');
         }
     
         if (!user) {
-            logger.error(`User with ID "${id}" not found`);
+            logger.error({ action: this.action },`User with ID "${id}" not found`);
             throw new NotFoundException(`User with ID "${id}" not found`);
         }
-    
+        logger.info({ action: this.action },`User Found.`);
         return user;
     }
 
@@ -86,7 +91,7 @@ export class UserService {
         try {
             return this.userModel.findOne({ email }).select('+password');          
         } catch (error) {     
-            logger.error(`Failed to retrieve users: ${error.message}`);            
+            logger.error({ action: this.action },`Failed to retrieve users: ${error.message}`);            
             throw new InternalServerErrorException('Failed to retrieve user');
         }           
     }
@@ -104,20 +109,20 @@ export class UserService {
             .findByIdAndUpdate(id, updateUserDto, { new: true });                       
         } catch (error) {            
             if (error.name === 'ValidationError') {                
-                logger.error(`Failed to update user": ${error.message}`); 
+                logger.error({ action: this.action },`Failed to update user": ${error.message}`); 
                 throw new BadRequestException(error.message);
             } else {
-                logger.error(`Failed to update user with ID "${id}": ${error.message}`);
+                logger.error({ action: this.action },`Failed to update user with ID "${id}": ${error.message}`);
                 throw new InternalServerErrorException('Failed to update user');
             }
         }
 
         if (!updatedUser) {
-            logger.error(`User with ID "${id}" not found`);            
+            logger.error({ action: this.action },`User with ID "${id}" not found`);            
             throw new NotFoundException(`User with ID "${id}" not found`);
         }
 
-        logger.info(`User with ID "${id}" updated successfully`);
+        logger.info({ action: this.action },`User with ID "${id}" updated successfully`);
         return updatedUser;
     }
 
@@ -131,16 +136,16 @@ export class UserService {
         try {
             result = await this.userModel.findByIdAndDelete(id);           
         } catch (error) {
-            logger.error(`Failed to delete user with ID "${id}": ${error.message}`, error.stack);
+            logger.error({ action: this.action },`Failed to delete user with ID "${id}": ${error.message}`, error.stack);
             throw new InternalServerErrorException('Failed to delete user');
         }
 
         if (!result) {
-            logger.error(`User with ID "${id}" not found`);
+            logger.error({ action: this.action },`User with ID "${id}" not found`);
             throw new NotFoundException(`User with ID "${id}" not found`);
         }
         
-        logger.info(`User with ID "${id}" deleted successfully`);
+        logger.info({ action: this.action },`User with ID "${id}" deleted successfully`);
         return result;    
         
     }

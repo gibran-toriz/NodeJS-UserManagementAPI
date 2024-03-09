@@ -12,7 +12,7 @@ import {
   export class LoggingInterceptor implements NestInterceptor {    
   
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-      const now = Date.now();
+      const start = process.hrtime.bigint();
       const ctx = context.switchToHttp();
       const request = ctx.getRequest();
       const response = ctx.getResponse();
@@ -23,8 +23,10 @@ import {
           tap(() => {
             const { method, url } = request;
             const statusCode = response.statusCode;
-            const diff = Date.now() - now;
-            const delay = diff % 1000;          
+            const end = process.hrtime.bigint();
+            const diff = end - start; 
+            const delay = Number(diff) / 1000000; 
+            
                                 
             try {
                 // Log the request and response details along with execution time

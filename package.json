@@ -1,13 +1,17 @@
 {
   "name": "node-js-user-management-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "This repository contains a Node.js-based backend API focused on user account management. Implementing authentication, authorization, and CRUD operations on user data.",
+  "author": "gibran-toriz",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "Apache License",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prestart": "npm install && npm rebuild bcrypt --build-from-source",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

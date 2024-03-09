@@ -1,0 +1,18 @@
+---
+# This file contains the scenarios for the user registration and login endpoint 
+scenarios:
+  - name: Register and Authenticate User
+    flow:      
+      - post:
+          url: "/users/register"
+          beforeRequest: "generateCredentials"
+          json:
+            email: "{{ email }}"
+            password: "{{ password }}"
+            firstName: "Test"
+            lastName: "User_{{ $randomString() }}"
+      - post:
+          url: "/auth/login"
+          json:
+            email: "{{ email }}"
+            password: "{{ password }}"

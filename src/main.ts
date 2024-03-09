@@ -17,7 +17,9 @@ require('dotenv').config();
  * @returns {Promise<void>} A promise that resolves when the application is successfully started.
  */
 async function bootstrap(): Promise<void> {
-  try {
+  // Action to log
+  const action = 'starting-application';
+  try {    
     // Create a NestJS application instance using Fastify as the HTTP adapter
     const app = await NestFactory.create<NestFastifyApplication>(
       AppModule,
@@ -55,11 +57,11 @@ async function bootstrap(): Promise<void> {
     const port = process.env.PORT || 3000;    
     await app.listen(port, '0.0.0.0');
 
-    // Log the application URL
-    logger.info(`Application v0.1.1 is running on: ${await app.getUrl()}`);
+    // Log the application URL    
+    logger.info({action}, `Application v0.1.1 is running on: ${await app.getUrl()}`);
   } catch (error) {
     // Log the error and exit the process
-    logger.error(`Failed to bootstrap the application: ${error.message}`, error);
+    logger.error({action}, `Failed to bootstrap the application: ${error.message}`, error);
     process.exit(1);
   }
 }

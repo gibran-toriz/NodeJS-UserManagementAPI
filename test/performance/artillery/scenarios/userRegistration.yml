@@ -1,0 +1,12 @@
+---
+# This file contains the scenarios for the user registration endpoint
+scenarios:
+  - name: User Registration Scenario
+    flow:
+      - post:
+          url: "/users/register"
+          json:
+            email: "user_{{ $randomString() }}@example.com"
+            password: "password123"
+            firstName: "Test"
+            lastName: "User_{{ $randomString() }}"
