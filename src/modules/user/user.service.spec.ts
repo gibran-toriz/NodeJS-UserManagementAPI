@@ -21,9 +21,7 @@ describe('UserService', () => {
             email: 'testemail',
             firstName: 'testfirstName',            
         };
-
-        const id = 'testid';
-
+        
         userModel = {
             create: jest.fn().mockResolvedValue(mockUser),
             findById: jest.fn().mockResolvedValue(mockUser),            
