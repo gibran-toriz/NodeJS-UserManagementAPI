@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateUserDto, UpdateUserDto } from './dto';
 
@@ -86,7 +86,7 @@ describe('UserService', () => {
      */
     it('should throw an error if user not found', async () => {        
         userModel.findById = jest.fn().mockResolvedValue(null);
-        await expect(service.findOne('testid')).rejects.toThrow(InternalServerErrorException);
+        await expect(service.findOne('testid')).rejects.toThrow(NotFoundException);
     });
 
     /**
@@ -135,10 +135,9 @@ describe('UserService', () => {
      */
     it('should update a user', async () => {
         const id = 'testid';
-        const updateUserDto: UpdateUserDto = { email: 'updatedemail', password: 'updatedpassword', firstName: 'updatedfirstName' };
+        const updateUserDto: UpdateUserDto = { password: 'updatedpassword', firstName: 'updatedfirstName' };
         const mockUpdatedUser = {
-            _id: id,            
-            email: updateUserDto.email,
+            _id: id,                        
             password: updateUserDto.password,            
             firstName: updateUserDto.firstName,
         };
@@ -156,10 +155,10 @@ describe('UserService', () => {
      */
     it('should throw an error if user not found during update', async () => {
         const id = 'testid';
-        const updateUserDto: UpdateUserDto = { email: 'updatedemail', password: 'updatedpassword', firstName: 'updatedfirstName' };
+        const updateUserDto: UpdateUserDto = { password: 'updatedpassword', firstName: 'updatedfirstName' };
         userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
 
-        await expect(service.update(id, updateUserDto)).rejects.toThrow(InternalServerErrorException);                
+        await expect(service.update(id, updateUserDto)).rejects.toThrow(NotFoundException);                
     });
 
 });

@@ -50,3 +50,19 @@ try {
     return next(error);
 }
 });
+
+
+UserSchema.pre('findOneAndUpdate', async function(next) {
+  const update = this.getUpdate() as any;
+  
+  if (update && update.password) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(update.password, salt);
+      this.setUpdate({ ...update, password: hash });
+    } catch (error) {
+      return next(error);
+    }
+  }
+  next();
+});

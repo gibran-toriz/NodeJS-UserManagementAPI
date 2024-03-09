@@ -61,16 +61,20 @@ export class UserService {
    * @returns The requested user.
    */
     async findOne(id: string): Promise<User> {
+        let user;
         try {
-            const user = await this.userModel.findById(id);
-            if (!user) {
-                throw new NotFoundException(`User with ID "${id}" not found`);
-            }
-            return user;
-        } catch (error) {            
-            logger.error(`Failed to retrieve user: ${error.message}`);            
-            throw new InternalServerErrorException('Failed to retrieve users');
-        }        
+            user = await this.userModel.findById(id);
+        } catch (error) {
+            logger.error(`Failed to retrieve user: ${error.message}`);
+            throw new InternalServerErrorException('Failed to retrieve user');
+        }
+    
+        if (!user) {
+            logger.error(`User with ID "${id}" not found`);
+            throw new NotFoundException(`User with ID "${id}" not found`);
+        }
+    
+        return user;
     }
 
     /**
@@ -94,15 +98,10 @@ export class UserService {
    * @returns The updated user.
    */
     async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+        let updatedUser;
         try {
-            const updatedUser = await this.userModel
-            .findByIdAndUpdate(id, updateUserDto, { new: true });
-            if (!updatedUser) {
-                logger.error(`User with ID "${id}" not found`);            
-                throw new NotFoundException(`User with ID "${id}" not found`);
-            }
-            logger.info(`User with ID "${id}" updated successfully`);
-            return updatedUser;
+            updatedUser = await this.userModel
+            .findByIdAndUpdate(id, updateUserDto, { new: true });                       
         } catch (error) {            
             if (error.name === 'ValidationError') {                
                 logger.error(`Failed to update user": ${error.message}`); 
@@ -112,6 +111,14 @@ export class UserService {
                 throw new InternalServerErrorException('Failed to update user');
             }
         }
+
+        if (!updatedUser) {
+            logger.error(`User with ID "${id}" not found`);            
+            throw new NotFoundException(`User with ID "${id}" not found`);
+        }
+
+        logger.info(`User with ID "${id}" updated successfully`);
+        return updatedUser;
     }
 
   /**
@@ -120,18 +127,21 @@ export class UserService {
    * @returns The result of the deletion operation.
    */
     async delete(id: string): Promise<any> {
+        let result;
         try {
-            const result = await this.userModel.findByIdAndDelete(id);
-            if (!result) {
-                logger.error(`User with ID "${id}" not found`);
-                throw new NotFoundException(`User with ID "${id}" not found`);
-            }
-            logger.info(`User with ID "${id}" deleted successfully`);
-            return result;    
+            result = await this.userModel.findByIdAndDelete(id);           
         } catch (error) {
             logger.error(`Failed to delete user with ID "${id}": ${error.message}`, error.stack);
             throw new InternalServerErrorException('Failed to delete user');
         }
+
+        if (!result) {
+            logger.error(`User with ID "${id}" not found`);
+            throw new NotFoundException(`User with ID "${id}" not found`);
+        }
+        
+        logger.info(`User with ID "${id}" deleted successfully`);
+        return result;    
         
     }
 

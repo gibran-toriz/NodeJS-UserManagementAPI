@@ -6,13 +6,6 @@ import { IsEmail, IsOptional, MinLength } from 'class-validator';
  */
 export class UpdateUserDto {  
 
-    /**
-     * The email of the user. Optional.
-     */
-    @ApiProperty({ example: 'user.tes@example.com' })
-    @IsEmail()
-    @IsOptional()
-    readonly email?: string;
 
     /**
      * The password of the user. Optional. Must be at least 8 characters long.
@@ -27,6 +20,7 @@ export class UpdateUserDto {
      */
     @ApiProperty({ example: 'User' })
     @IsOptional()
+    @MinLength(1)
     readonly firstName?: string;
 
     /**
@@ -34,5 +28,6 @@ export class UpdateUserDto {
      */
     @ApiProperty({ example: 'Test'})
     @IsOptional()
+    @MinLength(1)
     readonly lastName?: string;
 }
