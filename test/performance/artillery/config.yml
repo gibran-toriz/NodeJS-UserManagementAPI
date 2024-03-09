@@ -1,6 +1,6 @@
 config:
   processor: "./functions/scenarioHelpers.js"  # JavaScript file with custom functions
-  target: 'http://localhost:3000' # API base URL
+  target: '${TARGET_URL}' # API base URL
   phases:
     - duration: 60 # Test duration in seconds
       arrivalRate: 5 # New virtual users per second
