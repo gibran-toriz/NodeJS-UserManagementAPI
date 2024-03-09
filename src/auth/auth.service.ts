@@ -9,9 +9,12 @@ import { logger } from '../config/logger';
  */
 @Injectable()
 export class AuthService {
+    // Action to log
+    readonly action = 'auth-service';
+
     constructor(
         private userService: UserService,
-        private jwtService: JwtService,
+        private jwtService: JwtService,        
     ) {}
 
 
@@ -24,12 +27,12 @@ export class AuthService {
     async validateCredentials(email: string, password: string): Promise<any> {
         const user = await this.userService.findByEmailWithPassword(email);
         if (!user) {
-            logger.error(`Invalid credentials for user with email: ${email}`);  
+            logger.error({ action: this.action }, `Invalid credentials for user with email: ${email}`);  
             throw new UnauthorizedException('Invalid credentials');
         }        
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            logger.error(`Invalid credentials for user with email: ${email}`);  
+            logger.error({ action: this.action }, `Invalid credentials for user with email: ${email}`);  
             throw new UnauthorizedException('Invalid credentials');
         }
         const { password: _, ...result } = user.toObject();      
@@ -51,12 +54,12 @@ export class AuthService {
         
         try {
             const accessToken = this.jwtService.sign(payload);
-            logger.info(`User ${user.email} logged in successfully`);
+            logger.info({ action: this.action }, `User ${user.email} logged in successfully`);
             return {                
                 accessToken,
             };    
         } catch (error) {
-            logger.error(`Failed to generate access token: ${error.message}`);
+            logger.error({ action: this.action }, `Failed to generate access token: ${error.message}`);
             throw new InternalServerErrorException('Failed to generate access token');
         }                    
     }

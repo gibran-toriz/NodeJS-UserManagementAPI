@@ -6,5 +6,5 @@ scenarios:
       - post:
           url: "/auth/login"
           json:
-            email: "user_{{ $randomString() }}@example.com"
+            email: "performance_test@example.com"
             password: "password123"           
