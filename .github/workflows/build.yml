@@ -1,0 +1,24 @@
+name: Node.js Build
+
+on:  
+  workflow_dispatch:
+  push:
+    branches: [main, develop]
+
+jobs:
+  npm-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
+
+  deploy:
+    needs: npm-build
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
