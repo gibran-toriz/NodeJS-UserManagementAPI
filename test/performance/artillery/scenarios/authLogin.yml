@@ -1,0 +1,10 @@
+---
+# This file contains the scenarios for the auth login endpoint
+scenarios:
+  - name: Auth Login Scenario
+    flow:
+      - post:
+          url: "/auth/login"
+          json:
+            email: "user_{{ $randomString() }}@example.com"
+            password: "password123"           
