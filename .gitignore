@@ -121,6 +121,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+*launch.json
 
 # yarn v2
 .yarn/cache
@@ -128,3 +129,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Sonar 
+sonar-project.properties
+reports/coverage
+reports/junit
+reports/test-results
+
+# Environment
+.DS_Store
+.scannerwork/
+.vscode/
+```

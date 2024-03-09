@@ -1,8 +1,12 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { AppModule } from './modules/app.module';
-import { logger } from './config/logger'; 
+import { AppModule } from './app.module';
+import { logger } from './config/logger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
+import { LoggingInterceptor } from './common/interceptors/response-logging.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 // Load environment variables 
 require('dotenv').config();
@@ -21,21 +25,44 @@ async function bootstrap(): Promise<void> {
       { logger: false },
     );
 
-    // Define the application's port
-    const port = process.env.PORT || 3000;
+    // Apply validations globally
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      transform: true,      
+      disableErrorMessages: false,
+    }));
 
-    // Start the application
-    await app.listen(port, '0.0.0.0');
+    // Apply middleware globally
+    app.use(new RequestLoggingMiddleware().use);
+
+    // Apply interceptor globally
+    app.useGlobalInterceptors(new LoggingInterceptor());
+
+    // Set up Swagger for the application
+    const config = new DocumentBuilder()
+      .setTitle('User Management API')
+      .setDescription('API for managing user data')
+      .setVersion('0.1.0')
+      .addBearerAuth( 
+        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        'access-token', 
+      )
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('/api', app, document);
     
-    // URL where the application is running
-    logger.info(`Application is running on: ${await app.getUrl()}`);
+    // Starting the application
+    const port = process.env.PORT || 3000;    
+    await app.listen(port, '0.0.0.0');
 
-  } catch (error) {    
-    logger.error(`Failed to bootstrap the application: ${error.message}`, error);    
+    // Log the application URL
+    logger.info(`Application v0.1.1 is running on: ${await app.getUrl()}`);
+  } catch (error) {
+    // Log the error and exit the process
+    logger.error(`Failed to bootstrap the application: ${error.message}`, error);
     process.exit(1);
   }
-  }
-  
+}
 
 // Invoke the bootstrap function to start the application
 bootstrap();
