@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
 /**
  * Data transfer object for creating a user.
@@ -33,6 +33,7 @@ export class CreateUserDto {
      * The last name of the user (optional).
      */
     @ApiProperty({ example: 'Test' })
+    @IsOptional()
     readonly lastName?: string;
 }
 

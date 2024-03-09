@@ -6,6 +6,7 @@ import { logger } from './config/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { RequestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 import { LoggingInterceptor } from './common/interceptors/response-logging.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 // Load environment variables 
 require('dotenv').config();
@@ -24,6 +25,13 @@ async function bootstrap(): Promise<void> {
       { logger: false },
     );
 
+    // Apply validations globally
+    app.useGlobalPipes(new ValidationPipe({
+      whitelist: true,
+      transform: true,      
+      disableErrorMessages: false,
+    }));
+
     // Apply middleware globally
     app.use(new RequestLoggingMiddleware().use);
 
@@ -35,6 +43,10 @@ async function bootstrap(): Promise<void> {
       .setTitle('User Management API')
       .setDescription('API for managing user data')
       .setVersion('0.1.0')
+      .addBearerAuth( 
+        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        'access-token', 
+      )
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api', app, document);

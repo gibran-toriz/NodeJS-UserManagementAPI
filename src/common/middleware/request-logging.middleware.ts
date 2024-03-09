@@ -12,7 +12,7 @@ export class RequestLoggingMiddleware implements NestMiddleware {
  * @param next - The next middleware function.
  */
 use(req: Request, res: Response, next: NextFunction): void {
-    const { method, originalUrl, hostname} = req; 
+    const { method, originalUrl, ip} = req; 
     const startAt = new Date().toISOString();
 
     // Paths to exclude from logging
@@ -22,7 +22,7 @@ use(req: Request, res: Response, next: NextFunction): void {
     // Only log if the path is not in the exclude list
     if (!excludePaths.some(path => url.startsWith(path))) {
         try {
-            logger.info({ method, url, startAt, hostname }, 'Incoming request');    
+            logger.info({ method, url, startAt, ip }, 'Incoming request');    
         } catch (error) {         
             console.error('Logging error:', error);            
         }        

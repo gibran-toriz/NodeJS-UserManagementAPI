@@ -1,7 +1,8 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../modules/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { logger } from '../config/logger';
 
 /**
  * Service responsible for authentication-related operations.
@@ -22,14 +23,17 @@ export class AuthService {
      */
     async validateCredentials(email: string, password: string): Promise<any> {
         const user = await this.userService.findByEmailWithPassword(email);
-        if (user) {
-          const isMatch = await bcrypt.compare(password, user.password);
-          if (isMatch) {
-            const { password, ...result } = user.toObject();
-            return result;
-          }
+        if (!user) {
+            logger.error(`Invalid credentials for user with email: ${email}`);  
+            throw new UnauthorizedException('Invalid credentials');
+        }        
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            logger.error(`Invalid credentials for user with email: ${email}`);  
+            throw new UnauthorizedException('Invalid credentials');
         }
-        return null;
+        const { password: _, ...result } = user.toObject();      
+        return result;
     }
 
     /**
@@ -40,12 +44,20 @@ export class AuthService {
     async login(user: any) {     
         const payload = { 
             iss: 'example.company.com',
-            roles: user.roles || ['user'],
+            sub: user._id.toString(),
+            roles: (user.roles && user.roles.length > 0) ? user.roles : ['user'],            
             email: user.email,            
         };
         
-        return {
-            access_token: this.jwtService.sign(payload),
-        };
+        try {
+            const accessToken = this.jwtService.sign(payload);
+            logger.info(`User ${user.email} logged in successfully`);
+            return {                
+                accessToken,
+            };    
+        } catch (error) {
+            logger.error(`Failed to generate access token: ${error.message}`);
+            throw new InternalServerErrorException('Failed to generate access token');
+        }                    
     }
 }

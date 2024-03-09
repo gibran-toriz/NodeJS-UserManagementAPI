@@ -30,6 +30,8 @@ export const UserSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   // Last name of the user, optional field
   lastName: { type: String, required: false },  
+  // Roles assigned to the user
+  roles: { type: [String], required: true},
 });
 
 // Pre-save hook that executes before a User document is saved to the database
@@ -41,12 +43,26 @@ try {
     // Generate a salt for hashing
     const salt = await bcrypt.genSalt(10);
     // Hash the password with the generated salt and replace the plain text password with the hash
-    this.password = await bcrypt.hash(this.password, salt);
-    logger.info(`New user registered: ${this.email}`);
+    this.password = await bcrypt.hash(this.password, salt);    
     return next();
-} catch (error) {
-    // Pass any errors that occur during hashing to the next middleware
-    logger.warn(`Failed login attempt for user: ${this.email}`);
+} catch (error) {    
+    logger.error(`Failed login attempt for user: ${this.email}`);
     return next(error);
 }
+});
+
+
+UserSchema.pre('findOneAndUpdate', async function(next) {
+  const update = this.getUpdate() as any;
+  
+  if (update?.password) {  
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(update.password, salt);
+      this.setUpdate({ ...update, password: hash });
+    } catch (error) {
+      return next(error);
+    }
+  }
+  next();
 });
