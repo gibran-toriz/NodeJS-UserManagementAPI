@@ -10,10 +10,7 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-  
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
-
+    
       - name: Read the current version
         id: current_version
         run: |
@@ -36,6 +33,9 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "var version: $NEW_VERSION"
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
       
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
