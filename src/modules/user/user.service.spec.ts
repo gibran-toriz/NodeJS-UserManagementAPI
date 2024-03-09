@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { CreateUserDto, UpdateUserDto } from './dto';
 
@@ -22,10 +22,12 @@ describe('UserService', () => {
             firstName: 'testfirstName',            
         };
 
+        const id = 'testid';
+
         userModel = {
             create: jest.fn().mockResolvedValue(mockUser),
             findById: jest.fn().mockResolvedValue(mockUser),            
-            find: jest.fn().mockResolvedValue([mockUser]),
+            find: jest.fn(),                
         };
 
         const module: TestingModule = await Test.createTestingModule({
@@ -70,6 +72,29 @@ describe('UserService', () => {
             .toThrow(InternalServerErrorException);
     });
 
+    /**
+     * Test case: should throw BadRequestException on ValidationError
+     * It verifies that the create method of the UserService throws a BadRequestException on ValidationError.
+     */
+    it('should throw BadRequestException on ValidationError', async () => {
+        userModel.create.mockRejectedValue({ name: 'ValidationError', message: 'Validation failed' });
+        const createUserDto: CreateUserDto = { email: 'testemail', password: 'testpassword', firstName: 'testfirstName' };        
+    
+        await expect(service.create(createUserDto)).rejects.toThrow(BadRequestException);
+    });
+
+
+    /**
+     * Test case: should throw ConflictException on Duplicate error
+     * It verifies that the create method of the UserService throws a ConflictException on Duplicate error.
+     */
+    it('should throw ConflictException on Duplicate error', async () => {
+        userModel.create.mockRejectedValue({ name: 'MongoServerError', message: 'Duplicate key error', code: 11000});
+        const createUserDto: CreateUserDto = { email: 'testemail', password: 'testpassword', firstName: 'testfirstName' };        
+    
+        await expect(service.create(createUserDto)).rejects.toThrow(ConflictException);
+    });
+    
 
     /**
      * Test case: should find all users
@@ -159,6 +184,19 @@ describe('UserService', () => {
         userModel.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
 
         await expect(service.update(id, updateUserDto)).rejects.toThrow(NotFoundException);                
+    });
+
+
+    /**
+     * Test case: should throw an InternalServerErrorException during update
+     * It verifies that the update method of the UserService throws an InternalServerErrorException if the user is not found.
+     */    
+    it('should throw an InternalServerErrorException during update', async () => {
+        const id = 'testid';
+        const updateUserDto: UpdateUserDto = { password: 'updatedpassword', firstName: 'updatedfirstName' };
+        userModel.findById.mockRejectedValue({ name: 'ValidationError', message: 'Validation failed' });        
+
+        await expect(service.update(id, updateUserDto)).rejects.toThrow(InternalServerErrorException);                
     });
 
 });

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, MinLength } from 'class-validator';
+import { IsOptional, MinLength } from 'class-validator';
 
 /**
  * Data transfer object for updating a user.
