@@ -21,7 +21,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",    
-    "sonar": "sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/** -Dsonar.tests.inclusions=**/*.spec.ts -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.testExecutionReportPaths=reports/test-results/test-report.xml -Dsonar.javascript.lcov.reportPaths=reports/coverage/lcov.info -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN"
+    "sonar": "sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.sources=src -Dsonar.exclusions=**/node_modules/** -Dsonar.tests.inclusions=**/*.spec.ts -Dsonar.typescript.lcov.reportPaths=coverage/lcov.info -Dsonar.testExecutionReportPaths=reports/test-results/test-report.xml -Dsonar.javascript.lcov.reportPaths=reports/coverage/lcov.info -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.branch.name=main"
   },
   "dependencies": {
     "@fastify/multipart": "^8.1.0",
