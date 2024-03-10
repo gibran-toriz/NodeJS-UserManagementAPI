@@ -16,7 +16,7 @@ use(req: Request, res: Response, next: NextFunction): void {
     const startAt = new Date().toISOString();
 
     // Paths to exclude from logging
-    const excludePaths = [ '/api' ];
+    const excludePaths = [ '/api', '/', '/health' ];
     const url = originalUrl;    
     
     // Only log if the path is not in the exclude list

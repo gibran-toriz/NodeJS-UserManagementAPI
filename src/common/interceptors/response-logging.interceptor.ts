@@ -16,6 +16,11 @@ import {
       const ctx = context.switchToHttp();
       const request = ctx.getRequest();
       const response = ctx.getResponse();
+
+      // Skip logging for health check URLs
+      if (request.url === '/' || request.url === '/health') {
+        return next.handle();
+      }
   
       return next
         .handle()
